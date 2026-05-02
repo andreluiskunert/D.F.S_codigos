@@ -1,0 +1,12 @@
+<%@page import="br.com.minhaloja.classes.Produto"%>
+<%@page import="br.com.minhaloja.dao.ProdutoDAO"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html> <body> <ul>
+<%
+	 ProdutoDAO dao = new ProdutoDAO();
+	 for (Produto p : dao.obterTodos()) {
+		 out.println("<li>" + p.nome + "</li>");
+ }
+%>
+</ul> </body> </html>
