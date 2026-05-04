@@ -1,0 +1,68 @@
+#Configuracoes de acesso ao banco embarcado 
+spring.datasource.url=jdbc:h2:file:/data/webservice 
+spring.datasource.driverClassName=org.h2.Driver 
+spring.datasource.username=sa 
+spring.datasource.password=password 
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect 
+spring.h2.console.enabled=true 
+#spring.jpa.hibernate.ddl-auto=update 
+spring.jpa.hibernate.ddl-auto=create-drop  
+ 
+#Faz com que o hibernate crie as tabelas no BD antes de inserir os dados (data.sql) 
+spring.jpa.defer-datasource-initialization=true 
+spring.sql.init.mode=always
+<dependency>
+	<groupId>wsdl4j</groupId>
+	<artifactId>wsdl4j</artifactId>
+</dependency>
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://dominio.com/spring-soap-ws"
+           targetNamespace="http://dominio.com/spring-soap-ws" elementFormDefault="qualified">
+
+    <xs:element name="getCountryRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getCountryResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="country" type="tns:country"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="country">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="population" type="xs:int"/>
+            <xs:element name="capital" type="xs:string"/>
+            <xs:element name="currency" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
+mvn clean install  (Sistemas *nix)
+mvnw clean install (Sistema Windows)
+<dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>runtime</scope>
+</dependency>
+spring.datasource.url=jdbc:h2:file:/data/apirest
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=password
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.h2.console.enabled=true
+#spring.jpa.hibernate.ddl-auto=update
+spring.jpa.hibernate.ddl-auto=create-drop 
+
+#Faz com que o hibernate crie as tabelas no BD antes de inserir os dados (data.sql)
+spring.jpa.defer-datasource-initialization=true
+spring.sql.init.mode=always
+INSERT INTO country (name, capital, currency, population) VALUES ('Spain', 'Madrid', 'EUR', 46704314);
+INSERT INTO country (name, capital, currency, population) VALUES ('Poland', 'Warsaw', 'PLN', 38186860);
+INSERT INTO country (name, capital, currency, population) VALUES ('United Kingdom', 'London', 'GBP', 63705000);

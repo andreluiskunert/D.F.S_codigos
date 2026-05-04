@@ -1,0 +1,68 @@
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    <SOAP-ENV:Header/>
+    <SOAP-ENV:Body>
+        <ns2:getAllCountriesResponse xmlns:ns2="http://groupid.com/wsprovider">
+            <ns2:country>
+                <ns2:name>Spain</ns2:name>
+                <ns2:population>46704314</ns2:population>
+                <ns2:capital>Madrid</ns2:capital>
+                <ns2:currency>EUR</ns2:currency>
+            </ns2:country>
+            <ns2:country>
+                <ns2:name>Poland</ns2:name>
+                <ns2:population>38186860</ns2:population>
+                <ns2:capital>Warsaw</ns2:capital>
+                <ns2:currency>PLN</ns2:currency>
+            </ns2:country>
+            <ns2:country>
+                <ns2:name>United Kingdom</ns2:name>
+                <ns2:population>63705000</ns2:population>
+                <ns2:capital>London</ns2:capital>
+                <ns2:currency>GBP</ns2:currency>
+            </ns2:country>
+        </ns2:getAllCountriesResponse>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://groupid.com/wsprovider"
+           targetNamespace="http://groupid.com/wsprovider" elementFormDefault="qualified">
+
+    <xs:element name="getCountryRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getCountryResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="country" type="tns:country"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllCountriesRequest">
+        <xs:complexType>
+            <xs:sequence>
+            </xs:sequence>
+        </xs:complexType>
+	</xs:element>
+
+    <xs:element name="getAllCountriesResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="country" type="tns:country" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="country">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="population" type="xs:int"/>
+            <xs:element name="capital" type="xs:string"/>
+            <xs:element name="currency" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

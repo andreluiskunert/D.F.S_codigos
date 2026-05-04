@@ -1,0 +1,50 @@
+<SOAP-ENV:envelope>
+
+	<SOAP-ENV:header>
+	</SOAP-ENV:header>
+
+	<SOAP-ENV:body>
+
+		<SOAP-ENV:fault>
+		</SOAP-ENV:fault>
+
+	</SOAP-ENV:body>
+
+</SOAP-ENV:envelope>
+<?xml version="1.0"?>
+<soap:Envelope
+ xmlns:soap="http://www.w3.org/2003/05/soap-envelope/"
+ soap:encodingStyle="http://www.w3.org/2003/05/soap-encoding">
+  <soap:Body>
+    <ConsultaCEP>
+      <Credenciais>
+        <Usuario>string</Usuario>
+        <Senha>string</Senha>
+      </Credenciais>
+      <CEP>string</CEP>
+    </ConsultaCEP>
+  </soap:Body>
+</soap:Envelope><?xml version="1.0"?>
+<soap:Envelope
+ xmlns:soap="http://www.w3.org/2003/05/soap-envelope/"
+ soap:encodingStyle="http://www.w3.org/2003/05/soap-encoding">
+	<soap:Body>
+		<ConsultaCEPResponse>
+			<CEP>string</CEP>
+			<TipoLogradouro>string</TipoLogradouro>
+			<Logradouro>string</Logradouro>
+			<Bairro>string</Bairro>
+			<UF>string</UF>
+			<Estado>string</Estado>
+			<Cidade>string</Cidade>
+		</ConsultaCEPResponse>
+  </soap:Body>
+</soap:Envelope>
+<soapenv:Envelope xmlns:soapenv=http://schemas.xmlsoap.org/soap/envelope/ xmlns:gs="http://groupid.com/wsprovider">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <gs:getCountryRequest>
+         <gs:name>Spain</gs:name>
+      </gs:getCountryRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
