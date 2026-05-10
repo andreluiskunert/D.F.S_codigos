@@ -1,0 +1,115 @@
+version: '3.8'
+
+services:
+  dbpostgres:
+    image: 'postgres:latest'
+    container_name: 'api_db'
+    ports:
+      - '54329:5432'
+    restart: on-failure  
+    environment:
+      COMPOSE_PROJECT_NAME : ${COMPOSE_PROJECT_NAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "apirest", "-U", "user_bd" ]
+      interval: 5s
+      timeout: 5s
+      retries: 15  
+    networks:
+      - api_node_postgres    
+
+  backend:
+    container_name: 'api_node'
+    build:
+      context: ../backend
+      dockerfile: ./dockerfiles/Node.Dockerfile
+    ports:
+      - '3099:3000'
+    tty: true
+    restart: on-failure 
+    env_file:
+        - .env
+    environment:
+      DB_PASS: ${POSTGRES_PASSWORD}
+      DB_USER: ${POSTGRES_USER}
+      DB_NAME: ${POSTGRES_DB}
+      DB_HOST: ${DOCKER_DB_HOST}
+      DB_PORT: ${DB_PORT}
+      FASTIFY_DB_DRIVER: ${FASTIFY_DB_DRIVER}
+      FASTIFY_DB_DIALECT: ${FASTIFY_DB_DIALECT}
+      FASTIFY_DB_QUERY_PARAMS: ${FASTIFY_DB_QUERY_PARAMS}
+    links:
+      - dbpostgres
+    command: bash -c 'while !</dev/tcp/dbpostgres/5432; do sleep 1; done; npm run migrate; npm run seed; nodemon index.js'  
+    depends_on:
+      dbpostgres:
+        condition: service_healthy
+    networks:
+      - api_node_postgres    
+
+volumes:
+  data:
+  
+networks:
+  api_node_postgres:
+  FROM node:latest
+
+#Etapa 1: copia o package.json e instala as dependencias em diretorio especifico
+WORKDIR /src/
+COPY api/package*.json ./
+RUN npm install && npm cache clean --force
+#Instala o nodemon de forma global - necessario para que ele rode, do contrario teremos um erro
+RUN npm install -g nodemon
+#Adiciona o diretorio contendo a pasta node_modules para o PATH. Com isso as dependencias poderao ser vistas a partir da pasta da aplicacao
+ENV PATH /src/node_modules/.bin:$PATH
+
+#Etapa 2: altera o diretorio para o da aplicacao e copia os arquivos do projeto para o mesmo
+WORKDIR /src/api
+COPY api/ .
+
+EXPOSE 3000
+const fastify = require('fastify')({ logger: true })
+
+//Seta, a partir das variaveis de ambiente, algumas constantes.
+//  Essas constantes se referem a instrucoes do fastify que sao diferentes
+//    entre o Postgresql e o MySql
+const db_driver = process.env.FASTIFY_DB_DRIVER
+const db_dialect = process.env.FASTIFY_DB_DIALECT
+const db_query_params = process.env.FASTIFY_DB_QUERY_PARAMS
+
+//Registra a lib @fastify/postgres para ser usada no fastify
+fastify.register(require(`@fastify/${db_driver}`), {
+  connectionString: `${db_driver}://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}`
+})
+
+//Define um endpoint GET para a busca de pais pelo id
+fastify.get('/country/:id', function (req, reply) {
+  fastify[db_dialect].query(
+    `SELECT id, name, capital, currency, population FROM country WHERE id=${db_query_params}`, [req.params.id],
+    function onResult (err, result) {
+      console.log(result);
+      reply.send(err || result.rows || result)
+    }
+  )
+})
+
+//Define um endpoint GET a raiz da API, retornando apenas um 'hello world'
+fastify.get('/', function (request, reply) {
+    reply.send({ hello: 'world' })
+})
+
+//Configura o fastify para ouvir na porta 3000 e responder em qualquer host
+fastify.listen({ port: 3000, host: '0.0.0.0' }, (err, address) => {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    console.info(`Server listening on port ${address}`);
+});
+docker-compose up
+docker-compose up -d
+http://localhost:3099/country/1

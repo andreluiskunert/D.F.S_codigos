@@ -1,0 +1,19 @@
+     § Tabela01
+     Comando         	           Descrição         
+     docker volume create    	     Cria um volume.    
+     docker volume inspect    	     Exibe informações detalhadas sobre um ou mais volumes.    
+     docker volume ls    	     Lista os volumes existentes.    
+     docker volume prune    	     Remove todos os volumes locais não utilizados.    
+     docker volume rm    	     Remove um ou mais volumes.    
+     docker volume update    	     Atualiza volumes do tipo cluster.    
+     //
+     Tabela02
+     Comando         	           Descrição         
+     docker-compose build    	     Faz o build dos serviços descritos no YAML.    
+     docker-compose up    	     Cria e sobe os serviços/containers, jogando os logs para o terminal e deixando-o travado.    
+     docker-compose up -d    	     Cria e sobe os serviços, liberando o terminal.    
+     docker-compose down    	     Derruba e remove os serviços.    
+     docker-compose logs    	     Exibe os logs do container.    
+     docker-compose ps    	     Lista os containers.    
+     docker-compose start    	     Inicia o serviço.    
+     docker-compose stop    	     Para o serviço.    
