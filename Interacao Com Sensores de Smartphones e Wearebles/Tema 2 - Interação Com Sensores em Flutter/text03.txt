@@ -1,0 +1,65 @@
+import  'package:flutter/material.dart';
+import 'package:sensors/sensors.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  double? x, y, z;
+
+  @override
+  void initState() {
+    super.initState();
+    initSensors();
+  }
+
+  void initSensors() {
+    accelerometerEvents.listen((AccelerometerEvent event) {
+      setState(() {
+        x = event.x;
+        y = event.y;
+        z = event.z;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Acelerômetro'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Acelerômetro (x, y, z)',
+                style: TextStyle(fontSize: 20),
+              ),
+              Text(
+                'X: ${x ?? 'N/A'}',
+                style: TextStyle(fontSize: 16),
+              ),
+              Text(
+                'Y: ${y ?? 'N/A'}',
+                style: TextStyle(fontSize: 16),
+              ),
+              Text(
+                'Z: ${z ?? 'N/A'}',
+                style: TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

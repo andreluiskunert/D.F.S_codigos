@@ -1,0 +1,89 @@
+import 'package:flutter/material.dart';
+import 'package:sensors/sensors.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+    double distance = 0.8;
+    AccelerometerEvent ? prevAcceleration;
+
+      @override
+        void initState() {
+            super.initState();
+            initAccelerometer();
+        }
+
+    void initAccelerometer(){
+        accelerometerEvents.listen((AccelerometerEvent event) {
+            handleStep(event);
+        });
+    }
+
+    void handleStep(AccelerometerEvent event){
+        if(prevAcceleration == null){
+            prevAcceleration = event;
+            return;
+        }
+    }
+
+    // Calcula a aceleração resultante para medir a distância percorrida
+    final double acceleration = (event.x - prevAcceleration!.x).abs() +  (event.y - prevAcceleration!.y).abs() +
+     (event.z - prevAcceleration!.z).abs();
+
+    // Fator de conversão para metros (valor aproximado)
+    final double metersPerAcceleration = 0.1;
+
+    // Aplica um filtro para remover passo falsos
+    final bool isAboveThreshold = acceleration > 0.1; //Ajuste o valor conforme necessário
+
+    if(isAboveThreshold){
+        setState((){
+            distance += acceleration * meterPerAcceleration;
+        });
+    }
+
+    // Atualiza a aceleração anterior para o próximo cálculo
+    prevAcceleratio = event;
+
+}
+
+void resetDistance(){
+    setState((){
+        distance = 0.0;
+    })
+}
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Acelerômetro'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+                Text(
+                'Distância Percorrida: ${distance.toStringAsFixed(2)} m',
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(height:20),
+              ElevatedButton(
+                onPressed:resetDistance,
+                child: Text('Zerar Contagem')
+              ),
+            ],
+          ),
+        ),
+      ),
+    )
+  }

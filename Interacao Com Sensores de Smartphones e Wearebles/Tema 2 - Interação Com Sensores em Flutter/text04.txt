@@ -1,0 +1,55 @@
+import 'package:flutter/material. dart';
+import 'package:sensors/sensors.dart'; 
+void  main() {
+ runApp(OrientationDetectionApp()) ;
+}
+
+class OrientationDetectionApp extends Statefulwidget {
+    @override
+    _OrientationDetectionAppState createState() => _OrientationDetectionAppState()
+}  
+
+class OrientationDetectionAppState extends State<OrientationDetectionApp> {
+    String  orientation = 'Retrato';
+
+@override
+void initState() {
+    super.initState( );
+    initOrientationDetection ( );
+}
+
+void initOrientationDetection() {
+    accelerometerEvents.listen((AccelerometerEvent event) {
+        final isLandscape = event..abs () > 0.5 && event.y. abs () < 0.6;
+
+        setState(() ) {
+            orientation = isLandscape ? 'Paisagem' : 'Retrato';
+        });
+    });
+}
+@ override
+    Widget build( BuildContext context) {
+        return MaterialApp(
+            home: Scaffold(
+                appBar: AppBar(
+                    title: Text( 'Detecção de Orientação'),
+                ),
+                body: Center(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment. center,
+                        children: <Widget>[
+                            Text(
+                                'Orientação da tela:',
+                                style: TextStyle( fontSize: 18),
+                            ),
+                            Text(
+                                orientation,
+                                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                            ),
+                        ],
+                    ),
+                ),
+            ),
+        ); 
+    }
+}
